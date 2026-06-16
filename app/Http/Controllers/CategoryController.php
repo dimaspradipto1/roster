@@ -2,64 +2,57 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\CategoryDataTable;
+use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(CategoryDataTable $dataTable)
     {
-        //
+        return $dataTable->render('pages.kategori.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(): View
     {
-        //
+        return view('pages.kategori.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(CategoryRequest $request): RedirectResponse
     {
-        //
+        Category::create([
+            'nama_kategori' => $request->nama_kategori,
+        ]);
+
+        return redirect()
+            ->route('kategori.index')
+            ->with('success', 'Kategori berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Category $category)
+    public function edit(Category $kategori): View
     {
-        //
+        return view('pages.kategori.edit', compact('kategori'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Category $category)
+    public function update(CategoryRequest $request, Category $kategori): RedirectResponse
     {
-        //
+        $kategori->update([
+            'nama_kategori' => $request->nama_kategori,
+        ]);
+
+        return redirect()
+            ->route('kategori.index')
+            ->with('success', 'Kategori berhasil diperbarui.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Category $category)
+    public function destroy(Category $kategori): RedirectResponse
     {
-        //
-    }
+        $kategori->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Category $category)
-    {
-        //
+        return redirect()
+            ->route('kategori.index')
+            ->with('success', 'Kategori berhasil dihapus.');
     }
 }

@@ -2,64 +2,104 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\GalleryDataTable;
+use App\Http\Requests\GalleryRequest;
 use App\Models\Gallery;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class GalleryController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Tampilkan daftar galeri via DataTables.
      */
-    public function index()
+    public function index(GalleryDataTable $dataTables)
     {
-        //
+        return $dataTables->render('pages.gallery.index');
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Tampilkan form tambah foto.
      */
-    public function create()
+    public function create(): View
     {
-        //
+        return view('pages.gallery.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Simpan foto baru ke storage dan database.
      */
-    public function store(Request $request)
+    public function store(GalleryRequest $request): RedirectResponse
     {
-        //
+        $path = null;
+
+        if ($request->hasFile('foto')) {
+            // Simpan ke storage/app/public/gallery
+            $path = $request->file('foto')->store('gallery', 'public');
+        }
+
+        Gallery::create([
+            'judul'     => $request->judul,
+            'deskripsi' => $request->deskripsi,
+            'url'       => $path,
+        ]);
+
+        alert()->success('Berhasil!', 'Foto galeri berhasil ditambahkan.');
+
+        return redirect()->route('gallery.index');
     }
 
     /**
-     * Display the specified resource.
+     * Tampilkan form edit foto.
      */
-    public function show(Gallery $gallery)
+    public function edit(Gallery $gallery): View
     {
-        //
+        return view('pages.gallery.edit', compact('gallery'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Update data galeri.
+     * Jika ada foto baru: hapus foto lama, simpan yang baru.
+     * Jika tidak ada foto baru: tetap pakai foto lama.
      */
-    public function edit(Gallery $gallery)
+    public function update(GalleryRequest $request, Gallery $gallery): RedirectResponse
     {
-        //
+        $data = [
+            'judul'     => $request->judul,
+            'deskripsi' => $request->deskripsi,
+        ];
+
+        if ($request->hasFile('foto')) {
+            // Hapus foto lama dari storage jika ada
+            if ($gallery->url && Storage::disk('public')->exists($gallery->url)) {
+                Storage::disk('public')->delete($gallery->url);
+            }
+            // Simpan foto baru
+            $data['url'] = $request->file('foto')->store('gallery', 'public');
+        }
+
+        $gallery->update($data);
+
+        alert()->success('Berhasil!', 'Data galeri berhasil diperbarui.');
+
+        return redirect()->route('gallery.index');
     }
 
     /**
-     * Update the specified resource in storage.
+     * Hapus foto dari storage dan database.
      */
-    public function update(Request $request, Gallery $gallery)
+    public function destroy(Gallery $gallery): RedirectResponse
     {
-        //
-    }
+        // Hapus file dari storage
+        if ($gallery->url && Storage::disk('public')->exists($gallery->url)) {
+            Storage::disk('public')->delete($gallery->url);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Gallery $gallery)
-    {
-        //
+        $gallery->delete();
+
+        alert()->success('Berhasil!', 'Foto galeri berhasil dihapus.');
+
+        return redirect()->route('gallery.index');
     }
 }

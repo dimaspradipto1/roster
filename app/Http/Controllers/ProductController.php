@@ -2,64 +2,74 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\ProductDataTable;
+use App\Http\Requests\ProductRequest;
+use App\Models\Category;
 use App\Models\Product;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(ProductDataTable $dataTable)
     {
-        //
+        return $dataTable->render('pages.product.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(): View
     {
-        //
+        $categories = Category::all();
+        return view('pages.product.create', compact('categories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(ProductRequest $request): RedirectResponse
     {
-        //
+        Product::create([
+            'category_id' => $request->category_id,
+            'kode_produk' => $request->kode_produk,
+            'nama_produk' => $request->nama_produk,
+            'panjang' => $request->panjang,
+            'lebar' => $request->lebar,
+            'tebal' => $request->tebal,
+            'harga' => $request->harga,
+            'stok' => $request->stok,
+        ]);
+
+        return redirect()
+            ->route('product.index')
+            ->with('success', 'Produk berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Product $product)
+    public function edit(Product $product): View
     {
-        //
+        $categories = Category::all();
+        return view('pages.product.edit', compact('product', 'categories'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Product $product)
+    public function update(ProductRequest $request, Product $product): RedirectResponse
     {
-        //
+        $product->update([
+            'category_id' => $request->category_id,
+            'kode_produk' => $request->kode_produk,
+            'nama_produk' => $request->nama_produk,
+            'panjang' => $request->panjang,
+            'lebar' => $request->lebar,
+            'tebal' => $request->tebal,
+            'harga' => $request->harga,
+            'stok' => $request->stok,
+        ]);
+
+        return redirect()
+            ->route('product.index')
+            ->with('success', 'Produk berhasil diperbarui.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Product $product)
+    public function destroy(Product $product): RedirectResponse
     {
-        //
-    }
+        $product->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Product $product)
-    {
-        //
+        return redirect()
+            ->route('product.index')
+            ->with('success', 'Produk berhasil dihapus.');
     }
 }

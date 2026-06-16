@@ -1,0 +1,163 @@
+<?php
+
+namespace App\DataTables;
+
+use App\Models\Profil;
+use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Yajra\DataTables\EloquentDataTable;
+use Yajra\DataTables\Html\Builder as HtmlBuilder;
+use Yajra\DataTables\Html\Button;
+use Yajra\DataTables\Html\Column;
+use Yajra\DataTables\Services\DataTable;
+
+class ProfilDataTable extends DataTable
+{
+    /**
+     * Build the DataTable class.
+     *
+     * @param QueryBuilder<Profil> $query
+     */
+    public function dataTable(QueryBuilder $query): EloquentDataTable
+    {
+        return (new EloquentDataTable($query))
+            ->addIndexColumn()
+            ->addColumn('DT_RowIndex', '')
+            ->addColumn('logo', function ($profil) {
+                if ($profil->logo) {
+                    return '<img src="' . asset('storage/' . $profil->logo) . '"
+                                 alt="' . e($profil->nama_perusahaan ?? 'Logo') . '"
+                                 style="width:50px;height:50px;object-fit:contain;border-radius:4px;border:1px solid #dee2e6"
+                                 loading="lazy">';
+                }
+                return '<span class="text-muted small">Tidak ada logo</span>';
+            })
+            ->addColumn('nama_perusahaan', function ($profil) {
+                return $profil->nama_perusahaan
+                    ? e($profil->nama_perusahaan)
+                    : '<span class="text-muted fst-italic">—</span>';
+            })
+            ->addColumn('nama_pemilik', function ($profil) {
+                return $profil->nama_pemilik
+                    ? e($profil->nama_pemilik)
+                    : '<span class="text-muted fst-italic">—</span>';
+            })
+            ->addColumn('no_telp', function ($profil) {
+                return $profil->no_telp
+                    ? e($profil->no_telp)
+                    : '<span class="text-muted fst-italic">—</span>';
+            })
+            ->addColumn('alamat', function ($profil) {
+                return $profil->alamat
+                    ? '<span title="' . e($profil->alamat) . '">' . e(\Illuminate\Support\Str::limit($profil->alamat, 50)) . '</span>'
+                    : '<span class="text-muted fst-italic">—</span>';
+            })
+            ->addColumn('action', function ($profil) {
+                $btn  = '<div class="d-flex justify-content-center align-items-center" style="gap:5px">';
+
+                // Tombol Edit
+                $btn .= '<a href="' . route('profil.edit', $profil->id) . '"
+                            class="btn btn-sm btn-warning text-white"
+                            style="width:30px;height:30px;display:flex;align-items:center;justify-content:center"
+                            title="Edit">
+                            <i class="bi bi-pencil-fill" style="font-size:12px"></i>
+                         </a>';
+
+                // Tombol Hapus
+                $btn .= '<form action="' . route('profil.destroy', $profil->id) . '"
+                              method="POST" class="m-0"
+                              onsubmit="return confirm(\'Yakin ingin menghapus profil ini?\')">'
+                        . csrf_field() . method_field('DELETE')
+                        . '<button type="submit"
+                                   class="btn btn-sm btn-danger"
+                                   style="width:30px;height:30px;display:flex;align-items:center;justify-content:center"
+                                   title="Hapus">
+                            <i class="bi bi-trash-fill" style="font-size:12px"></i>
+                           </button>
+                         </form>';
+
+                $btn .= '</div>';
+                return $btn;
+            })
+            ->setRowId('DT_RowIndex')
+            ->rawColumns(['logo', 'nama_perusahaan', 'nama_pemilik', 'no_telp', 'alamat', 'action']);
+    }
+
+    /**
+     * Get the query source of dataTable.
+     *
+     * @return QueryBuilder<Profil>
+     */
+    public function query(Profil $model): QueryBuilder
+    {
+        return $model->newQuery()->select(['id', 'logo', 'nama_perusahaan', 'nama_pemilik', 'no_telp', 'alamat']);
+    }
+
+    /**
+     * Optional method if you want to use the html builder.
+     */
+    public function html(): HtmlBuilder
+    {
+        return $this->builder()
+            ->setTableId('profil-table')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->orderBy(1)
+            ->selectStyleSingle()
+            ->buttons([
+                Button::make('excel'),
+                Button::make('csv'),
+                Button::make('print'),
+                Button::make('reset'),
+                Button::make('reload'),
+            ]);
+    }
+
+    /**
+     * Get the dataTable columns definition.
+     */
+    public function getColumns(): array
+    {
+        return [
+            Column::make('DT_RowIndex')
+                ->title('No')
+                ->width('5%')
+                ->addClass('text-center')
+                ->searchable(false)
+                ->orderable(false),
+
+            Column::computed('logo')
+                ->title('Logo')
+                ->width('10%')
+                ->addClass('text-center')
+                ->exportable(false)
+                ->printable(false),
+
+            Column::make('nama_perusahaan')
+                ->title('Nama Perusahaan'),
+
+            Column::make('nama_pemilik')
+                ->title('Nama Pemilik'),
+
+            Column::make('no_telp')
+                ->title('No. Telepon'),
+
+            Column::make('alamat')
+                ->title('Alamat'),
+
+            Column::computed('action')
+                ->title('Aksi')
+                ->exportable(false)
+                ->printable(false)
+                ->width('10%')
+                ->addClass('text-center'),
+        ];
+    }
+
+    /**
+     * Get the filename for export.
+     */
+    protected function filename(): string
+    {
+        return 'Profil_' . date('YmdHis');
+    }
+}

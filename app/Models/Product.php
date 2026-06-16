@@ -3,8 +3,31 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
-    //
+    protected $table = 'products';
+
+    protected $fillable = [
+        'category_id',
+        'kode_produk',
+        'nama_produk',
+        'panjang',
+        'lebar',
+        'tebal',
+        'harga',
+        'stok',
+    ];
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function galleries(): HasMany
+    {
+        return $this->hasMany(ProductGallery::class, 'product_id');
+    }
 }
