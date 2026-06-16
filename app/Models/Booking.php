@@ -11,6 +11,7 @@ class Booking extends Model
 
     protected $fillable = [
         'product_id',
+        'nomor_admin_id',
         'nama',
         'no_wa',
     ];
@@ -18,5 +19,10 @@ class Booking extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    public function nomorAdmin(): BelongsTo
+    {
+        return $this->belongsTo(NomorAdmin::class, 'nomor_admin_id');
     }
 }

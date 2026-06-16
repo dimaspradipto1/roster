@@ -28,7 +28,7 @@ class DashboardController extends Controller
         $categoriesChart = Category::withCount('products')->get();
 
         // Booking terbaru
-        $latestBookings = Booking::with('product')->latest()->take(5)->get();
+        $latestBookings = Booking::with(['product', 'nomorAdmin'])->latest()->take(5)->get();
 
         return view('layouts.dashboard.index', compact(
             'totalProducts',

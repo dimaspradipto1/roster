@@ -12,6 +12,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\NomorAdminController;
 
 Route::controller(AuthController::class)->group(function () {
     Route::get('/', 'login')->name('login');
@@ -37,4 +38,5 @@ Route::middleware(['auth', 'checkrole'])->group(function () {
     Route::resource('product-image', ProductImageController::class);
     Route::resource('booking', BookingController::class);
     Route::resource('news', NewsController::class);
+    Route::resource('nomoradmin', NomorAdminController::class);
 });

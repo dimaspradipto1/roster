@@ -64,8 +64,8 @@ class AuthController extends Controller
         $role = Auth::user()->roles;
 
         return match ($role) {
-            'admin' => redirect()->route('dashboard')->with('success', 'Selamat datang kembali, Admin!'),
-            default => redirect()->route('user.home')->with('success', 'Selamat datang!'),
+            'admin' => to_route('dashboard')->with('success', 'Selamat datang kembali, Admin!'),
+            default => to_route('dashboard')->with('success', 'Selamat datang!'),
         };
     }
 }

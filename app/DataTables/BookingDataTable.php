@@ -30,6 +30,11 @@ class BookingDataTable extends DataTable
                     ? e($booking->product->nama_produk) . ' (' . e($booking->product->kode_produk) . ')'
                     : '<span class="text-muted fst-italic">Tanpa Produk</span>';
             })
+            ->addColumn('admin', function ($booking) {
+                return $booking->nomorAdmin
+                    ? e($booking->nomorAdmin->nama_admin) . ' (' . e($booking->nomorAdmin->no_wa) . ')'
+                    : '<span class="text-muted fst-italic">Tanpa Admin</span>';
+            })
             ->addColumn('no_wa', function ($booking) {
                 return e($booking->no_wa);
             })
@@ -38,8 +43,12 @@ class BookingDataTable extends DataTable
 
                 // Format nomor WA ke standar internasional (contoh: 0812 -> 62812)
                 $phone = preg_replace('/[^0-9]/', '', $booking->no_wa);
-                if (strpos($phone, '0') === 0) {
+                if (strpos($phone, '62') === 0) {
+                    // Sudah diawali dengan 62
+                } elseif (strpos($phone, '0') === 0) {
                     $phone = '62' . substr($phone, 1);
+                } else {
+                    $phone = '62' . $phone;
                 }
                 $prodName = $booking->product ? $booking->product->nama_produk : 'Produk Roster';
                 $prodCode = $booking->product ? $booking->product->kode_produk : '-';
@@ -80,7 +89,7 @@ class BookingDataTable extends DataTable
                 return $btn;
             })
             ->setRowId('DT_RowIndex')
-            ->rawColumns(['product', 'action']);
+            ->rawColumns(['product', 'admin', 'action']);
     }
 
     /**
@@ -90,7 +99,7 @@ class BookingDataTable extends DataTable
      */
     public function query(Booking $model): QueryBuilder
     {
-        return $model->newQuery()->with('product')->select(['id', 'product_id', 'nama', 'no_wa']);
+        return $model->newQuery()->with(['product', 'nomorAdmin'])->select(['id', 'product_id', 'nomor_admin_id', 'nama', 'no_wa']);
     }
 
     /**
@@ -133,7 +142,10 @@ class BookingDataTable extends DataTable
                 ->title('Produk'),
 
             Column::make('no_wa')
-                ->title('No. WhatsApp'),
+                ->title('No. WhatsApp (Pelanggan)'),
+
+            Column::computed('admin')
+                ->title('Admin Tujuan'),
 
             Column::computed('action')
                 ->title('Aksi')

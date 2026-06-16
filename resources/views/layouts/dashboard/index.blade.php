@@ -123,10 +123,11 @@
                         <div class="table-responsive">
                             <table class="table table-striped table-hover align-middle mb-0">
                                 <thead>
-                                    <tr>
+                                                                   <tr>
                                         <th>Nama Pelanggan</th>
                                         <th>Produk</th>
-                                        <th>No. WhatsApp</th>
+                                        <th>No. WhatsApp (Pelanggan)</th>
+                                        <th>Admin Tujuan</th>
                                         <th>Waktu</th>
                                         <th class="text-center">Aksi</th>
                                     </tr>
@@ -144,12 +145,24 @@
                                                 @endif
                                             </td>
                                             <td>{{ $booking->no_wa }}</td>
+                                            <td>
+                                                @if($booking->nomorAdmin)
+                                                    {{ $booking->nomorAdmin->nama_admin }}
+                                                    <span class="badge bg-light text-dark border ms-1">{{ $booking->nomorAdmin->no_wa }}</span>
+                                                @else
+                                                    <span class="text-muted fst-italic">Tanpa Admin</span>
+                                                @endif
+                                            </td>
                                             <td>{{ $booking->created_at->diffForHumans() }}</td>
                                             <td class="text-center">
                                                 @php
                                                     $phone = preg_replace('/[^0-9]/', '', $booking->no_wa);
-                                                    if (strpos($phone, '0') === 0) {
+                                                    if (strpos($phone, '62') === 0) {
+                                                        // Sudah diawali dengan 62
+                                                    } elseif (strpos($phone, '0') === 0) {
                                                         $phone = '62' . substr($phone, 1);
+                                                    } else {
+                                                        $phone = '62' . $phone;
                                                     }
                                                     $prodName = $booking->product ? $booking->product->nama_produk : 'Produk Roster';
                                                     $prodCode = $booking->product ? $booking->product->kode_produk : '-';

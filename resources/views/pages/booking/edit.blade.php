@@ -60,6 +60,27 @@
                         @enderror
                     </div>
 
+                    {{-- Pilih Admin --}}
+                    <div class="mb-3">
+                        <label for="nomor_admin_id" class="form-label fw-semibold">
+                            Pilih Admin <span class="text-danger">*</span>
+                        </label>
+                        <select id="nomor_admin_id"
+                                name="nomor_admin_id"
+                                class="form-select @error('nomor_admin_id') is-invalid @enderror"
+                                required>
+                            <option value="">-- Pilih Admin --</option>
+                            @foreach($admins as $admin)
+                                <option value="{{ $admin->id }}" {{ old('nomor_admin_id', $booking->nomor_admin_id) == $admin->id ? 'selected' : '' }}>
+                                    {{ $admin->nama_admin }} ({{ $admin->no_wa }})
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('nomor_admin_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     {{-- Nama --}}
                     <div class="mb-3">
                         <label for="nama" class="form-label fw-semibold">
