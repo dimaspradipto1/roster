@@ -544,6 +544,19 @@
       text-decoration: none;
     }
     .form-footer a:hover { text-decoration: underline; }
+    .back-to-home-link {
+      color: var(--muted) !important;
+      font-weight: 500 !important;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 6px;
+      transition: color 0.2s;
+    }
+    .back-to-home-link:hover {
+      color: var(--terracotta) !important;
+      text-decoration: none !important;
+    }
 
     /* Copyright bawah */
     .copyright {
@@ -795,7 +808,8 @@
 
         {{-- Footer --}}
         <div class="form-footer">
-          <p>Belum punya akses? <a href="#">Hubungi Admin</a></p>
+          <p style="margin-bottom: 10px;">Belum punya akses? <a href="#">Hubungi Admin</a></p>
+          <p><a href="{{ route('homepage') }}" class="back-to-home-link"><i class="bi bi-arrow-left"></i> Kembali ke Halaman Utama</a></p>
         </div>
 
       </div>{{-- .form-card --}}

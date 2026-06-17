@@ -25,5 +25,9 @@ class AppServiceProvider extends ServiceProvider
         if (app()->environment('production')) {
             URL::forceScheme('https');
         }
+
+        \Illuminate\Support\Facades\View::composer('*', function ($view) {
+            $view->with('contact', \App\Models\Contact::first());
+        });
     }
 }

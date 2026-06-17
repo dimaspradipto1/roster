@@ -1,0 +1,222 @@
+@extends('layouts.dashboard.template')
+
+@section('content')
+<div class="pagetitle">
+    <h1>Tambah Profil Tentang Kami</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('about.index') }}">Tentang Kami</a></li>
+            <li class="breadcrumb-item active">Tambah</li>
+        </ol>
+    </nav>
+</div>
+
+<div class="row">
+    <div class="col-lg-10">
+        <div class="card shadow-sm">
+            <div class="card-header py-3">
+                <h5 class="mb-0 fw-semibold">
+                    <i class="bi bi-info-circle-fill me-2 text-primary"></i>Form Tambah Profil
+                </h5>
+            </div>
+            <div class="card-body pt-4">
+
+                @if ($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <strong>Periksa kembali data Anda:</strong>
+                        <ul class="mb-0 mt-1 ps-3">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                <form action="{{ route('about.store') }}" method="POST">
+                    @csrf
+
+                    <!-- SECTION 1: PROFIL PERUSAHAAN -->
+                    <div class="border-bottom pb-3 mb-4">
+                        <h6 class="fw-bold text-primary mb-3"><i class="bi bi-building me-2"></i>1. Profil Perusahaan</h6>
+                        
+                        <div class="mb-3">
+                            <label for="judul_profil" class="form-label fw-semibold">Judul Profil</label>
+                            <input type="text" id="judul_profil" name="judul_profil" class="form-control @error('judul_profil') is-invalid @enderror" value="{{ old('judul_profil') }}" placeholder="Contoh: Dedikasi Terhadap Keindahan & Sirkulasi Udara Alami">
+                            @error('judul_profil')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="deskripsi_profil_1" class="form-label fw-semibold">Deskripsi Profil Paragraf 1</label>
+                            <textarea id="deskripsi_profil_1" name="deskripsi_profil_1" rows="3" class="form-control @error('deskripsi_profil_1') is-invalid @enderror" placeholder="Paragraf pertama untuk deskripsi profil perusahaan">{{ old('deskripsi_profil_1') }}</textarea>
+                            @error('deskripsi_profil_1')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="deskripsi_profil_2" class="form-label fw-semibold">Deskripsi Profil Paragraf 2</label>
+                            <textarea id="deskripsi_profil_2" name="deskripsi_profil_2" rows="3" class="form-control @error('deskripsi_profil_2') is-invalid @enderror" placeholder="Paragraf kedua untuk deskripsi profil perusahaan (opsional)">{{ old('deskripsi_profil_2') }}</textarea>
+                            @error('deskripsi_profil_2')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- SECTION 2: VISI & MISI -->
+                    <div class="border-bottom pb-3 mb-4">
+                        <h6 class="fw-bold text-primary mb-3"><i class="bi bi-eye me-2"></i>2. Visi & Misi</h6>
+
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <label for="visi_judul" class="form-label fw-semibold">Judul Kartu Visi</label>
+                                <input type="text" id="visi_judul" name="visi_judul" class="form-control" value="{{ old('visi_judul', 'Visi Kami') }}" placeholder="Visi Kami">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="visi_icon" class="form-label fw-semibold">Icon Visi <small class="text-muted">(Bootstrap Icon Class)</small></label>
+                                <input type="text" id="visi_icon" name="visi_icon" class="form-control" value="{{ old('visi_icon', 'bi-eye') }}" placeholder="bi-eye">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="visi" class="form-label fw-semibold">Deskripsi Visi</label>
+                            <textarea id="visi" name="visi" rows="3" class="form-control @error('visi') is-invalid @enderror" placeholder="Pernyataan Visi Perusahaan">{{ old('visi') }}</textarea>
+                            @error('visi')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <label for="misi_judul" class="form-label fw-semibold">Judul Kartu Misi</label>
+                                <input type="text" id="misi_judul" name="misi_judul" class="form-control" value="{{ old('misi_judul', 'Misi Kami') }}" placeholder="Misi Kami">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="misi_icon" class="form-label fw-semibold">Icon Misi <small class="text-muted">(Bootstrap Icon Class)</small></label>
+                                <input type="text" id="misi_icon" name="misi_icon" class="form-control" value="{{ old('misi_icon', 'bi-rocket-takeoff') }}" placeholder="bi-rocket-takeoff">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="misi" class="form-label fw-semibold">Poin-Poin Misi <small class="text-muted">(Gunakan tombol Enter untuk memisahkan setiap poin misi)</small></label>
+                            <textarea id="misi" name="misi" rows="5" class="form-control @error('misi') is-invalid @enderror" placeholder="Contoh:&#10;Menyediakan produk berkualitas tinggi.&#10;Memberikan layanan terbaik.">{{ old('misi') }}</textarea>
+                            @error('misi')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- SECTION 3: NILAI UTAMA KAMI -->
+                    <div class="border-bottom pb-3 mb-4">
+                        <h6 class="fw-bold text-primary mb-3"><i class="bi bi-award me-2"></i>3. Nilai Utama Kami (Values)</h6>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="judul_nilai" class="form-label fw-semibold">Judul Section Nilai</label>
+                                <input type="text" id="judul_nilai" name="judul_nilai" class="form-control" value="{{ old('judul_nilai') }}" placeholder="Contoh: Prinsip Kerja yang Kami Pegang Teguh">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="deskripsi_nilai" class="form-label fw-semibold">Deskripsi Section Nilai</label>
+                                <input type="text" id="deskripsi_nilai" name="deskripsi_nilai" class="form-control" value="{{ old('deskripsi_nilai') }}" placeholder="Contoh: Kualitas dan kepercayaan bukanlah sebuah kebetulan...">
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <!-- Card 1 -->
+                            <div class="col-md-6">
+                                <div class="p-3 border rounded bg-light">
+                                    <div class="fw-bold text-secondary mb-2"><i class="bi bi-1-circle-fill"></i> Nilai 1</div>
+                                    <div class="mb-2">
+                                        <label class="form-label small">Judul</label>
+                                        <input type="text" name="nilai_1_judul" class="form-control form-control-sm" value="{{ old('nilai_1_judul') }}" placeholder="Kualitas Bersertifikasi">
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label small">Deskripsi</label>
+                                        <textarea name="nilai_1_deskripsi" rows="2" class="form-control form-control-sm" placeholder="Deskripsi nilai 1">{{ old('nilai_1_deskripsi') }}</textarea>
+                                    </div>
+                                    <div>
+                                        <label class="form-label small">Icon (Bootstrap Icon Class)</label>
+                                        <input type="text" name="nilai_1_icon" class="form-control form-control-sm" value="{{ old('nilai_1_icon', 'bi-shield-fill-check') }}" placeholder="bi-shield-fill-check">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card 2 -->
+                            <div class="col-md-6">
+                                <div class="p-3 border rounded bg-light">
+                                    <div class="fw-bold text-secondary mb-2"><i class="bi bi-2-circle-fill"></i> Nilai 2</div>
+                                    <div class="mb-2">
+                                        <label class="form-label small">Judul</label>
+                                        <input type="text" name="nilai_2_judul" class="form-control form-control-sm" value="{{ old('nilai_2_judul') }}" placeholder="Keanekaragaman Motif">
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label small">Deskripsi</label>
+                                        <textarea name="nilai_2_deskripsi" rows="2" class="form-control form-control-sm" placeholder="Deskripsi nilai 2">{{ old('nilai_2_deskripsi') }}</textarea>
+                                    </div>
+                                    <div>
+                                        <label class="form-label small">Icon (Bootstrap Icon Class)</label>
+                                        <input type="text" name="nilai_2_icon" class="form-control form-control-sm" value="{{ old('nilai_2_icon', 'bi-palette-fill') }}" placeholder="bi-palette-fill">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card 3 -->
+                            <div class="col-md-6">
+                                <div class="p-3 border rounded bg-light">
+                                    <div class="fw-bold text-secondary mb-2"><i class="bi bi-3-circle-fill"></i> Nilai 3</div>
+                                    <div class="mb-2">
+                                        <label class="form-label small">Judul</label>
+                                        <input type="text" name="nilai_3_judul" class="form-control form-control-sm" value="{{ old('nilai_3_judul') }}" placeholder="Fokus pada Pelanggan">
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label small">Deskripsi</label>
+                                        <textarea name="nilai_3_deskripsi" rows="2" class="form-control form-control-sm" placeholder="Deskripsi nilai 3">{{ old('nilai_3_deskripsi') }}</textarea>
+                                    </div>
+                                    <div>
+                                        <label class="form-label small">Icon (Bootstrap Icon Class)</label>
+                                        <input type="text" name="nilai_3_icon" class="form-control form-control-sm" value="{{ old('nilai_3_icon', 'bi-people-fill') }}" placeholder="bi-people-fill">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card 4 -->
+                            <div class="col-md-6">
+                                <div class="p-3 border rounded bg-light">
+                                    <div class="fw-bold text-secondary mb-2"><i class="bi bi-4-circle-fill"></i> Nilai 4</div>
+                                    <div class="mb-2">
+                                        <label class="form-label small">Judul</label>
+                                        <input type="text" name="nilai_4_judul" class="form-control form-control-sm" value="{{ old('nilai_4_judul') }}" placeholder="Distribusi Aman">
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label small">Deskripsi</label>
+                                        <textarea name="nilai_4_deskripsi" rows="2" class="form-control form-control-sm" placeholder="Deskripsi nilai 4">{{ old('nilai_4_deskripsi') }}</textarea>
+                                    </div>
+                                    <div>
+                                        <label class="form-label small">Icon (Bootstrap Icon Class)</label>
+                                        <input type="text" name="nilai_4_icon" class="form-control form-control-sm" value="{{ old('nilai_4_icon', 'bi-truck-flatbed') }}" placeholder="bi-truck-flatbed">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Buttons --}}
+                    <div class="d-flex gap-2">
+                        <a href="{{ route('about.index') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left me-1"></i> Batal
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save me-1"></i> Simpan
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
