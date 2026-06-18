@@ -16,99 +16,273 @@
 @endphp
 
 <!-- ═══════════════════════════════════════════════
-     HERO SECTION
+     HERO SLIDER — PURE IMAGE BANNER
 ═══════════════════════════════════════════════ -->
-<section class="hero" id="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-overlay"></div>
-  <div class="hero-pattern"></div>
+<div class="banner-slider" id="bannerSlider">
 
-  <!-- Dekorasi grid roster kanan -->
-  <div class="hero-roster-visual d-none d-xl-grid">
-    @php
-      $holePositions = [1, 4, 9, 12, 17, 20, 25, 28, 33, 36, 41, 44, 49, 52, 57, 60];
-    @endphp
-    @for($i = 1; $i <= 64; $i++)
-      <div class="cell {{ in_array($i % 13, [0, 3, 7]) ? 'hole' : '' }}"></div>
-    @endfor
-  </div>
-
-  <div class="container">
-    <div class="hero-content" data-aos="fade-right" data-aos-duration="800">
-      <div class="hero-badge">
-        <div class="hero-badge-dot"></div>
-        <span>Distributor Resmi Roster Dinding</span>
+  <!-- Slides -->
+  @if(isset($banners) && $banners->count() > 0)
+    @foreach($banners as $index => $banner)
+      <div class="bs-slide {{ $index === 0 ? 'bs-active' : '' }}">
+        <img src="{{ asset('storage/' . $banner->url) }}" alt="{{ $banner->judul ?? 'Roster Dinding Minimalis — Distributor Resmi' }}" class="bs-img">
       </div>
-
-      <h1 class="hero-title">
-        Roster Dinding<br>
-        <em>Berkualitas Tinggi</em><br>
-        untuk Hunian Modern
-      </h1>
-
-      <p class="hero-desc">
-        Distributor terpercaya bata ventilasi & roster dinding dekoratif —
-        dari pola minimalis hingga premium. Cocok untuk hunian, ruko,
-        dan bangunan komersial modern Anda.
-      </p>
-
-      <!-- Produk Chips -->
-      <div class="hero-chips">
-        <div class="hero-chip">
-          <i class="bi bi-grid-3x3"></i>
-          <span>Roster Beton</span>
-        </div>
-        <div class="hero-chip">
-          <i class="bi bi-square-half"></i>
-          <span>Roster Tanah Liat</span>
-        </div>
-        <div class="hero-chip">
-          <i class="bi bi-diamond"></i>
-          <span>Roster Minimalis</span>
-        </div>
-        <div class="hero-chip">
-          <i class="bi bi-circle-square"></i>
-          <span>Roster Motif</span>
-        </div>
-        <div class="hero-chip">
-          <i class="bi bi-stack"></i>
-          <span>Roster Premium</span>
-        </div>
-      </div>
-
-      <div class="hero-cta">
-        <a href="{{ route('homepage.produk') }}" class="btn-primary-hero">
-          <i class="bi bi-grid-3x3-gap-fill"></i>
-          Lihat Katalog Produk
-        </a>
-        <a href="#kontak" class="btn-outline-hero">
-          <i class="bi bi-telephone"></i>
-          Hubungi Kami
-        </a>
-      </div>
-
-      <!-- Stats -->
-      <div class="hero-stats">
-        <div class="hero-stat">
-          <div class="hero-stat-num">50<sup>+</sup></div>
-          <div class="hero-stat-txt">Motif Tersedia</div>
-        </div>
-        <div class="hero-stat">
-          <div class="hero-stat-num">10<sup>rb+</sup></div>
-          <div class="hero-stat-txt">Produk Terjual</div>
-        </div>
-        <div class="hero-stat">
-          <div class="hero-stat-num">500<sup>+</sup></div>
-          <div class="hero-stat-txt">Pelanggan Puas</div>
-        </div>
-        <div class="hero-stat">
-          <div class="hero-stat-num">5<sup>★</sup></div>
-          <div class="hero-stat-txt">Rating Rata-rata</div>
-        </div>
-      </div>
+    @endforeach
+  @else
+    <div class="bs-slide bs-active">
+      <img src="{{ asset('frontend/img/banner-1.png') }}" alt="Roster Dinding Minimalis — Distributor Resmi" class="bs-img">
     </div>
+    <div class="bs-slide">
+      <img src="{{ asset('frontend/img/banner-2.png') }}" alt="Promo Harga Grosir Roster Dinding" class="bs-img">
+    </div>
+    <div class="bs-slide">
+      <img src="{{ asset('frontend/img/banner-3.png') }}" alt="Produk Bersertifikat SNI" class="bs-img">
+    </div>
+  @endif
+
+  <!-- Arrow Prev -->
+  <button class="bs-arrow bs-prev" id="bsPrev" aria-label="Sebelumnya">
+    <i class="bi bi-chevron-left"></i>
+  </button>
+
+  <!-- Arrow Next -->
+  <button class="bs-arrow bs-next" id="bsNext" aria-label="Berikutnya">
+    <i class="bi bi-chevron-right"></i>
+  </button>
+
+  <!-- Dots -->
+  <div class="bs-dots">
+    @if(isset($banners) && $banners->count() > 0)
+      @foreach($banners as $index => $banner)
+        <button class="bs-dot {{ $index === 0 ? 'bs-dot-active' : '' }}" data-idx="{{ $index }}" aria-label="Slide {{ $index + 1 }}"></button>
+      @endforeach
+    @else
+      <button class="bs-dot bs-dot-active" data-idx="0" aria-label="Slide 1"></button>
+      <button class="bs-dot" data-idx="1" aria-label="Slide 2"></button>
+      <button class="bs-dot" data-idx="2" aria-label="Slide 3"></button>
+    @endif
   </div>
-</section>
+
+  <!-- Progress bar -->
+  <div class="bs-progress"><div class="bs-progress-fill" id="bsProgress"></div></div>
+
+</div>
+
+@push('styles')
+<style>
+/* ═══════════════════════════════════════════
+   PURE IMAGE BANNER SLIDER
+═══════════════════════════════════════════ */
+.banner-slider {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #111;
+  user-select: none;
+}
+
+/* Each slide */
+.bs-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 1;
+}
+.bs-slide.bs-active {
+  position: relative;
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 2;
+  height: auto;
+}
+
+/* The banner image — natural scale, no crop */
+.bs-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transform: none;
+}
+
+/* Arrows */
+.bs-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.35);
+  border: 1.5px solid rgba(255,255,255,0.22);
+  color: #fff;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: background 0.2s, transform 0.2s;
+  outline: none;
+}
+.bs-arrow:hover {
+  background: rgba(193,68,14,0.7);
+  border-color: rgba(193,68,14,0.8);
+  transform: translateY(-50%) scale(1.1);
+}
+.bs-prev { left: 24px; }
+.bs-next { right: 24px; }
+
+/* Dots */
+.bs-dots {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.bs-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.35);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  padding: 0;
+  outline: none;
+}
+.bs-dot.bs-dot-active {
+  width: 28px;
+  border-radius: 5px;
+  background: #e8622a;
+}
+
+/* Progress bar */
+.bs-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255,255,255,0.12);
+  z-index: 20;
+}
+.bs-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #c1440e, #e8622a);
+  border-radius: 2px;
+  transition: width 0.08s linear;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .bs-arrow { width: 38px; height: 38px; font-size: 15px; }
+  .bs-prev { left: 10px; }
+  .bs-next { right: 10px; }
+}
+</style>
+@endpush
+
+@push('scripts')
+<script>
+(function () {
+  var DELAY = 5000;
+  var slides = document.querySelectorAll('.bs-slide');
+  var dots   = document.querySelectorAll('.bs-dot');
+  var fill   = document.getElementById('bsProgress');
+  var prev   = document.getElementById('bsPrev');
+  var next   = document.getElementById('bsNext');
+
+  if (slides.length <= 1) {
+    if (prev) prev.style.display = 'none';
+    if (next) next.style.display = 'none';
+    if (fill) fill.parentNode.style.display = 'none';
+    var dotsContainer = document.querySelector('.bs-dots');
+    if (dotsContainer) dotsContainer.style.display = 'none';
+    return;
+  }
+
+  var cur    = 0;
+  var raf    = null;
+  var start  = null;
+  var paused = false;
+
+  function show(idx) {
+    slides[cur].classList.remove('bs-active');
+    dots[cur].classList.remove('bs-dot-active');
+    cur = (idx + slides.length) % slides.length;
+    slides[cur].classList.add('bs-active');
+    dots[cur].classList.add('bs-dot-active');
+    resetProgress();
+  }
+
+  function resetProgress() {
+    cancelAnimationFrame(raf);
+    if (fill) fill.style.width = '0%';
+    if (!paused) runProgress();
+  }
+
+  function runProgress() {
+    start = performance.now();
+    function tick(now) {
+      var pct = Math.min(((now - start) / DELAY) * 100, 100);
+      if (fill) fill.style.width = pct + '%';
+      if (pct >= 100) { show(cur + 1); }
+      else { raf = requestAnimationFrame(tick); }
+    }
+    raf = requestAnimationFrame(tick);
+  }
+
+  if (prev) prev.addEventListener('click', function () { show(cur - 1); });
+  if (next) next.addEventListener('click', function () { show(cur + 1); });
+
+  dots.forEach(function (d) {
+    d.addEventListener('click', function () { show(parseInt(d.dataset.idx)); });
+  });
+
+  // Pause on hover
+  var slider = document.getElementById('bannerSlider');
+  if (slider) {
+    slider.addEventListener('mouseenter', function () {
+      paused = true;
+      cancelAnimationFrame(raf);
+    });
+    slider.addEventListener('mouseleave', function () {
+      paused = false;
+      start = performance.now() - ((parseFloat(fill ? fill.style.width : 0) / 100) * DELAY);
+      runProgress();
+    });
+  }
+
+  // Touch swipe
+  var tx = 0;
+  if (slider) {
+    slider.addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; }, { passive: true });
+    slider.addEventListener('touchend', function (e) {
+      var diff = tx - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 40) { diff > 0 ? show(cur + 1) : show(cur - 1); }
+    }, { passive: true });
+  }
+
+  // Keyboard
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') show(cur + 1);
+    if (e.key === 'ArrowLeft')  show(cur - 1);
+  });
+
+  runProgress();
+})();
+</script>
+@endpush
 
 <!-- ═══════════════════════════════════════════════
      PRODUCT STRIP
@@ -172,42 +346,56 @@
     </div>
 
     <div class="row g-4">
-      <div class="col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="100">
-        <div class="feature-card">
-          <div class="feature-icon-wrap">
-            <i class="bi bi-grid-3x3-gap-fill"></i>
+      @if(isset($features) && $features->count() > 0)
+        @foreach($features as $index => $feature)
+          <div class="col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="{{ ($index + 1) * 100 }}">
+            <div class="feature-card">
+              <div class="feature-icon-wrap">
+                <i class="bi {{ $feature->icon }}"></i>
+              </div>
+              <div class="feature-title">{{ $feature->judul }}</div>
+              <p class="feature-desc">{{ $feature->deskripsi }}</p>
+            </div>
           </div>
-          <div class="feature-title">Motif Terlengkap</div>
-          <p class="feature-desc">Tersedia 50+ pilihan motif roster dari minimalis modern hingga premium klasik, cocok untuk berbagai konsep arsitektur.</p>
-        </div>
-      </div>
-      <div class="col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="200">
-        <div class="feature-card">
-          <div class="feature-icon-wrap">
-            <i class="bi bi-award"></i>
+        @endforeach
+      @else
+        <div class="col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="100">
+          <div class="feature-card">
+            <div class="feature-icon-wrap">
+              <i class="bi bi-grid-3x3-gap-fill"></i>
+            </div>
+            <div class="feature-title">Motif Terlengkap</div>
+            <p class="feature-desc">Tersedia 50+ pilihan motif roster dari minimalis modern hingga premium klasik, cocok untuk berbagai konsep arsitektur.</p>
           </div>
-          <div class="feature-title">Bersertifikat SNI</div>
-          <p class="feature-desc">Seluruh produk kami telah memenuhi standar SNI dan teruji kekuatan serta ketahanan materialnya untuk jangka panjang.</p>
         </div>
-      </div>
-      <div class="col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="300">
-        <div class="feature-card">
-          <div class="feature-icon-wrap">
-            <i class="bi bi-currency-dollar"></i>
+        <div class="col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="200">
+          <div class="feature-card">
+            <div class="feature-icon-wrap">
+              <i class="bi bi-award"></i>
+            </div>
+            <div class="feature-title">Bersertifikat SNI</div>
+            <p class="feature-desc">Seluruh produk kami telah memenuhi standar SNI and teruji kekuatan serta ketahanan materialnya untuk jangka panjang.</p>
           </div>
-          <div class="feature-title">Harga Kompetitif</div>
-          <p class="feature-desc">Harga grosir langsung dari distributor resmi. Dapatkan penawaran terbaik untuk pembelian partai besar dengan diskon menarik.</p>
         </div>
-      </div>
-      <div class="col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="400">
-        <div class="feature-card">
-          <div class="feature-icon-wrap">
-            <i class="bi bi-headset"></i>
+        <div class="col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="300">
+          <div class="feature-card">
+            <div class="feature-icon-wrap">
+              <i class="bi bi-currency-dollar"></i>
+            </div>
+            <div class="feature-title">Harga Kompetitif</div>
+            <p class="feature-desc">Harga grosir langsung dari distributor resmi. Dapatkan penawaran terbaik untuk pembelian partai besar dengan diskon menarik.</p>
           </div>
-          <div class="feature-title">Konsultasi Gratis</div>
-          <p class="feature-desc">Tim ahli kami siap membantu Anda memilih jenis dan motif roster yang tepat sesuai desain dan kebutuhan bangunan Anda.</p>
         </div>
-      </div>
+        <div class="col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="400">
+          <div class="feature-card">
+            <div class="feature-icon-wrap">
+              <i class="bi bi-headset"></i>
+            </div>
+            <div class="feature-title">Konsultasi Gratis</div>
+            <p class="feature-desc">Tim ahli kami siap membantu Anda memilih jenis dan motif roster yang tepat sesuai desain and kebutuhan bangunan Anda.</p>
+          </div>
+        </div>
+      @endif
     </div>
   </div>
 </section>
@@ -429,18 +617,38 @@
           </li>
         </ul>
 
-        <a href="#kontak" class="btn-primary-hero" style="display:inline-flex;">
-          <i class="bi bi-chat-dots"></i>
-          Konsultasi Gratis Sekarang
-        </a>
+        <!-- Stats mini bar -->
+        <div class="d-flex flex-wrap gap-3 mb-4">
+          <div style="background:rgba(193,68,14,0.08); border:1px solid rgba(193,68,14,0.2); border-radius:12px; padding:12px 20px; text-align:center; min-width:100px;">
+            <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:900; color:var(--terracotta); line-height:1;">500<sup style="font-size:12px;">+</sup></div>
+            <div style="font-size:11px; color:var(--muted); margin-top:2px; font-weight:500;">Proyek Selesai</div>
+          </div>
+          <div style="background:rgba(193,68,14,0.08); border:1px solid rgba(193,68,14,0.2); border-radius:12px; padding:12px 20px; text-align:center; min-width:100px;">
+            <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:900; color:var(--terracotta); line-height:1;">50<sup style="font-size:12px;">+</sup></div>
+            <div style="font-size:11px; color:var(--muted); margin-top:2px; font-weight:500;">Motif Tersedia</div>
+          </div>
+          <div style="background:rgba(193,68,14,0.08); border:1px solid rgba(193,68,14,0.2); border-radius:12px; padding:12px 20px; text-align:center; min-width:100px;">
+            <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:900; color:var(--terracotta); line-height:1;">SNI</div>
+            <div style="font-size:11px; color:var(--muted); margin-top:2px; font-weight:500;">Bersertifikat</div>
+          </div>
+        </div>
+
+        <div class="d-flex flex-wrap gap-3">
+          <a href="#kontak" class="btn-primary-hero" style="display:inline-flex;">
+            <i class="bi bi-chat-dots"></i>
+            Konsultasi Gratis Sekarang
+          </a>
+          <a href="{{ route('homepage.tentang') }}" class="btn-outline-hero" style="display:inline-flex; background:rgba(193,68,14,0.1); border-color:rgba(193,68,14,0.3); color:var(--terracotta);">
+            <i class="bi bi-arrow-right-circle"></i>
+            Profil Perusahaan
+          </a>
+        </div>
       </div>
     </div>
   </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════
+</section><!-- ═══════════════════════════════════════════════
      TESTIMONIAL
-═══════════════════════════════════════════════ -->
+ ═══════════════════════════════════════════════ -->
 <section class="section-bg-white" id="testimoni">
   <div class="container">
     <div class="text-center mb-5" data-aos="fade-up">
@@ -453,56 +661,92 @@
     </div>
 
     <div class="row g-4">
-      <div class="col-md-6 col-xl-4" data-aos="fade-up" data-aos-delay="100">
-        <div class="testimonial-card">
-          <div class="stars">
-            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+      @if(isset($testimonials) && $testimonials->count() > 0)
+        @foreach($testimonials as $index => $testi)
+          <div class="col-md-6 col-xl-4" data-aos="fade-up" data-aos-delay="{{ ($index + 1) * 100 }}">
+            <div class="testimonial-card">
+              <div class="stars">
+                @for($i = 1; $i <= 5; $i++)
+                  @if($i <= $testi->bintang)
+                    <i class="bi bi-star-fill"></i>
+                  @else
+                    <i class="bi bi-star"></i>
+                  @endif
+                @endfor
+              </div>
+              <p class="testimonial-text">"{{ $testi->pesan }}"</p>
+              <div class="testimonial-author">
+                <div class="author-avatar">
+                  {{ strtoupper(substr($testi->nama, 0, 2)) }}
+                </div>
+                <div>
+                  <div class="author-name">{{ $testi->nama }}</div>
+                  <div class="author-role">{{ $testi->pekerjaan }}</div>
+                </div>
+              </div>
+            </div>
           </div>
-          <p class="testimonial-text">"Kualitas roster betonnya sangat bagus, sesuai dengan foto katalog. Pengiriman juga cepat dan pengemasannya aman. Pasti akan beli lagi untuk proyek berikutnya!"</p>
-          <div class="testimonial-author">
-            <div class="author-avatar">BN</div>
-            <div>
-              <div class="author-name">Budi Nugraha</div>
-              <div class="author-role">Kontraktor, Bandung</div>
+        @endforeach
+      @else
+        <div class="col-md-6 col-xl-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="testimonial-card">
+            <div class="stars">
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            </div>
+            <p class="testimonial-text">"Kualitas roster betonnya sangat bagus, sesuai dengan foto katalog. Pengiriman juga cepat dan pengemasannya aman. Pasti akan beli lagi untuk proyek berikutnya!"</p>
+            <div class="testimonial-author">
+              <div class="author-avatar">BN</div>
+              <div>
+                <div class="author-name">Budi Nugraha</div>
+                <div class="author-role">Kontraktor, Bandung</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="col-md-6 col-xl-4" data-aos="fade-up" data-aos-delay="200">
-        <div class="testimonial-card">
-          <div class="stars">
-            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-          </div>
-          <p class="testimonial-text">"Pilihan motifnya banyak banget! Kami pakai roster minimalis untuk fasad toko dan hasilnya luar biasa. Customer jadi lebih tertarik masuk karena tampilannya estetik."</p>
-          <div class="testimonial-author">
-            <div class="author-avatar">SR</div>
-            <div>
-              <div class="author-name">Sari Rahayu</div>
-              <div class="author-role">Pemilik Usaha, Surabaya</div>
+        <div class="col-md-6 col-xl-4" data-aos="fade-up" data-aos-delay="200">
+          <div class="testimonial-card">
+            <div class="stars">
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            </div>
+            <p class="testimonial-text">"Pilihan motifnya banyak banget! Kami pakai roster minimalis untuk fasad toko dan hasilnya luar biasa. Customer jadi lebih tertarik masuk karena tampilannya estetik."</p>
+            <div class="testimonial-author">
+              <div class="author-avatar">SR</div>
+              <div>
+                <div class="author-name">Sari Rahayu</div>
+                <div class="author-role">Pemilik Usaha, Surabaya</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="col-md-6 col-xl-4" data-aos="fade-up" data-aos-delay="300">
-        <div class="testimonial-card">
-          <div class="stars">
-            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
-          </div>
-          <p class="testimonial-text">"Harga sangat terjangkau untuk kualitas segitu. Saya sudah langganan 3 tahun dan tidak pernah kecewa. Pelayanannya ramah dan responsif, recommended!"</p>
-          <div class="testimonial-author">
-            <div class="author-avatar">DH</div>
-            <div>
-              <div class="author-name">Dimas Harianto</div>
-              <div class="author-role">Arsitek, Jakarta</div>
+        <div class="col-md-6 col-xl-4" data-aos="fade-up" data-aos-delay="300">
+          <div class="testimonial-card">
+            <div class="stars">
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+            </div>
+            <p class="testimonial-text">"Harga sangat terjangkau untuk kualitas segitu. Saya sudah langganan 3 tahun dan tidak pernah kecewa. Pelayanannya ramah dan responsif, recommended!"</p>
+            <div class="testimonial-author">
+              <div class="author-avatar">DH</div>
+              <div>
+                <div class="author-name">Dimas Harianto</div>
+                <div class="author-role">Arsitek, Jakarta</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      @endif
+    </div>
+
+    {{-- CTA Button to Testimonial Form Page --}}
+    <div class="text-center mt-5" data-aos="fade-up">
+      <a href="{{ route('homepage.testimoni') }}#form-testimoni" class="btn-primary-hero" style="display:inline-flex;">
+        <i class="bi bi-chat-left-heart-fill"></i>
+        Tulis Testimoni Anda
+      </a>
     </div>
   </div>
 </section>

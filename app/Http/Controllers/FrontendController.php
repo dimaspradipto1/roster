@@ -8,7 +8,10 @@ class FrontendController extends Controller
 {
     public function homepage()
     {
-        return view('layouts.frontend.homepage');
+        $banners      = \App\Models\Banner::where('aktif', true)->orderBy('urutan')->get();
+        $features     = \App\Models\Feature::orderBy('urutan')->get();
+        $testimonials = \App\Models\Testimonial::where('aktif', true)->orderByDesc('id')->take(6)->get();
+        return view('layouts.frontend.homepage', compact('banners', 'features', 'testimonials'));
     }
 
     public function produk()
@@ -32,7 +35,27 @@ class FrontendController extends Controller
 
     public function testimoni()
     {
-        return view('layouts.frontend.testimoni');
+        $testimonials = \App\Models\Testimonial::where('aktif', true)->orderByDesc('id')->get();
+        return view('layouts.frontend.testimoni', compact('testimonials'));
+    }
+
+    /**
+     * Menyimpan testimoni yang diajukan oleh pengguna/publik.
+     */
+    public function storeTestimonial(\App\Http\Requests\TestimonialRequest $request)
+    {
+        \App\Models\Testimonial::create([
+            'nama'      => $request->nama,
+            'pekerjaan' => $request->pekerjaan,
+            'kategori'  => $request->kategori,
+            'bintang'   => $request->bintang,
+            'pesan'     => $request->pesan,
+            'aktif'     => false, // Default pending (butuh moderasi admin)
+        ]);
+
+        alert()->success('Terima Kasih!', 'Ulasan Anda berhasil dikirim dan akan segera diproses oleh admin.');
+
+        return redirect()->back();
     }
 
     public function faq()

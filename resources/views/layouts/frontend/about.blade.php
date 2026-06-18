@@ -16,105 +16,22 @@
 @endphp
 
 <!-- ═══════════════════════════════════════════════
-     ABOUT HERO BANNER — PREMIUM VERSION
+     ABOUT HERO BANNER — SIMPLE VERSION
 ═══════════════════════════════════════════════ -->
-<div class="about-hero-v2">
-  {{-- Real photo background --}}
-  <div class="ahv2-photo" style="background-image:url('{{ asset('frontend/img/about-hero-bg.png') }}')"></div>
-  {{-- Dark gradient overlay --}}
-  <div class="ahv2-overlay"></div>
-  {{-- Roster-grid decorative pattern overlay --}}
-  <div class="ahv2-pattern"></div>
+<div class="about-hero">
+  <div class="about-hero-bg"></div>
+  <div class="about-hero-overlay"></div>
+  <div class="about-hero-pattern"></div>
 
-  <div class="container position-relative" style="z-index:4;">
-    <div class="row align-items-center min-vh-50" style="min-height:520px; padding:100px 0 60px;">
-
-      {{-- LEFT: text content --}}
-      <div class="col-lg-7" data-aos="fade-right" data-aos-duration="900">
-
-        {{-- Badge --}}
-        <div class="ahv2-badge" data-aos="fade-down" data-aos-delay="100">
-          <span class="ahv2-badge-dot"></span>
-          Sejak 2016 · Distributor Resmi Roster Indonesia
-        </div>
-
-        {{-- Main title --}}
-        <h1 class="ahv2-title">
-          Tentang <em>Roster<br>Dinding</em> Minimalis
-        </h1>
-
-        {{-- Sub text --}}
-        <p class="ahv2-sub">
-          Membangun setiap dinding menjadi karya seni — dari roster beton dekoratif  
-          berkualitas SNI hingga bata ventilasi premium untuk hunian modern Indonesia.
-        </p>
-
-        {{-- Breadcrumb --}}
-        <div class="breadcrumb-custom" data-aos="fade-up" data-aos-delay="300">
-          <a href="{{ route('homepage') }}"><i class="bi bi-house-fill me-1"></i>Beranda</a>
-          <span class="sep">/</span>
-          <span class="active">Tentang Kami</span>
-        </div>
-      </div>
-
-      {{-- RIGHT: floating image card + stats --}}
-      <div class="col-lg-5 d-none d-lg-flex justify-content-end align-items-center" data-aos="fade-left" data-aos-duration="900" data-aos-delay="200">
-        <div class="ahv2-card-wrap">
-          {{-- Glowing frame card --}}
-          <div class="ahv2-img-card">
-            {{-- Roster grid visual (same CSS pattern from profil section) --}}
-            <div class="ahv2-roster-grid">
-              @php
-                $filledCells = [1,2,4,5,7,8,9,11,13,14,16,17,19,20,22,23,25,26,28,29];
-                $holeCells   = [3,6,10,12,15,18,21,24,27,30];
-              @endphp
-              @for($i = 1; $i <= 30; $i++)
-                @if(in_array($i, $holeCells))
-                  <div class="r hole"></div>
-                @elseif(in_array($i, $filledCells))
-                  <div class="r filled"></div>
-                @else
-                  <div class="r"></div>
-                @endif
-              @endfor
-            </div>
-            <div class="ahv2-img-label">Pola Estetis Roster</div>
-          </div>
-
-          {{-- Floating stats pills --}}
-          <div class="ahv2-pill ahv2-pill-1" data-aos="zoom-in" data-aos-delay="500">
-            <i class="bi bi-buildings-fill"></i>
-            <div><strong>500+</strong><span>Proyek Selesai</span></div>
-          </div>
-          <div class="ahv2-pill ahv2-pill-2" data-aos="zoom-in" data-aos-delay="650">
-            <i class="bi bi-award-fill"></i>
-            <div><strong>SNI</strong><span>Bersertifikat</span></div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    {{-- Bottom stats row --}}
-    <div class="ahv2-stats-row" data-aos="fade-up" data-aos-delay="400">
-      <div class="ahv2-stat">
-        <span class="ahv2-stat-num">50<sup>+</sup></span>
-        <span class="ahv2-stat-label">Motif Tersedia</span>
-      </div>
-      <div class="ahv2-stat-divider"></div>
-      <div class="ahv2-stat">
-        <span class="ahv2-stat-num">10<sup>Thn+</sup></span>
-        <span class="ahv2-stat-label">Pengalaman</span>
-      </div>
-      <div class="ahv2-stat-divider"></div>
-      <div class="ahv2-stat">
-        <span class="ahv2-stat-num">500<sup>+</sup></span>
-        <span class="ahv2-stat-label">Pelanggan Puas</span>
-      </div>
-      <div class="ahv2-stat-divider"></div>
-      <div class="ahv2-stat">
-        <span class="ahv2-stat-num">4.9<sup>★</sup></span>
-        <span class="ahv2-stat-label">Rating Rata-rata</span>
+  <div class="container">
+    <div class="about-hero-content" data-aos="fade-up" data-aos-duration="800">
+      <h1 class="about-hero-title">
+        Tentang <em>Kami</em>
+      </h1>
+      <div class="breadcrumb-custom">
+        <a href="{{ route('homepage') }}"><i class="bi bi-house-fill me-1"></i>Beranda</a>
+        <span class="sep">/</span>
+        <span class="active">Tentang Kami</span>
       </div>
     </div>
   </div>

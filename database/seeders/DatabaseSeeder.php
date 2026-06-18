@@ -5,6 +5,12 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Database\Seeders\UserSeeder;
+use Database\Seeders\AboutSeeder;
+use Database\Seeders\FeatureSeeder;
+use Database\Seeders\ProductSeeder;
+use Database\Seeders\KategoriSeeder;
+use Database\Seeders\MilestoneSeeder;
+use Database\Seeders\TestimonialSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class DatabaseSeeder extends Seeder
@@ -24,6 +30,8 @@ class DatabaseSeeder extends Seeder
             FaqSeeder::class,
             AboutSeeder::class,
             MilestoneSeeder::class,
+            FeatureSeeder::class,
+            TestimonialSeeder::class,
         ]);
     }
 }

@@ -1643,17 +1643,101 @@
        RESPONSIVENESS
     ═══════════════════════════════════════════════ */
     @media (max-width: 768px) {
+      /* Typography & Section spacing */
+      section { padding: 50px 0; }
+      .section-title { font-size: 26px; }
+      .section-desc { font-size: 14px; line-height: 1.6; }
+
+      /* Hero mobile tweaks */
       .hero-title { letter-spacing: -1px; }
       .hero-stats { gap: 24px; }
       .hero-stat { padding-right: 24px; margin-right: 24px; }
-      .product-strip-item { border-right: none; border-bottom: 1px solid var(--border); padding: 16px 0; }
+
+      /* Navbar mobile collapse premium design */
+      .navbar-collapse {
+        background: var(--white);
+        border: 1.5px solid var(--border);
+        border-radius: 16px;
+        padding: 20px;
+        margin-top: 15px;
+        box-shadow: 0 12px 30px rgba(60,30,10,0.12);
+      }
+      .navbar-collapse.show {
+        animation: slideDownMenu 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      }
+      @keyframes slideDownMenu {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .nav-link-custom {
+        padding: 10px 16px !important;
+        font-size: 14.5px;
+        margin-bottom: 4px;
+      }
+      .btn-login-nav {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-top: 10px;
+        padding: 12px;
+      }
+
+      /* Product strip mobile divider fix */
+      .product-strip-item { 
+        border-right: none; 
+        border-bottom: 1px solid var(--border); 
+        padding: 18px 0; 
+      }
+      .row > div:last-child .product-strip-item { 
+        border-bottom: none !important; 
+      }
+
+      /* Roster grid mobile overflow fix */
+      .about-roster-grid {
+        grid-template-columns: repeat(6, 40px) !important;
+        grid-template-rows: repeat(5, 40px) !important;
+        gap: 6px !important;
+      }
+      .about-img-main {
+        height: 300px !important;
+      }
       .about-stat-card { display: none; }
-      section { padding: 60px 0; }
+
+      /* Testimonials spacing */
+      .testimonial-card { padding: 24px; }
+      .testimonial-text { font-size: 13.5px; line-height: 1.7; }
+
+      /* FAQ compact styling */
+      .faq-question { padding: 16px 18px; font-size: 14.5px; }
+      .faq-answer { padding: 0 18px 16px; font-size: 13.5px; }
+
+      /* Timeline mobile adjustments */
       .timeline::after { left: 31px; }
       .timeline-container { width: 100%; padding-left: 70px; padding-right: 25px; }
       .timeline-container::after { left: 21px; top: 25px; }
       .right { left: 0%; }
       .left::after { left: 21px; }
+
+      /* CTA mobile alignment and stack buttons */
+      .cta-section { text-align: center; }
+      .cta-section .section-label { justify-content: center; }
+      .cta-section .section-label::before { display: none; }
+      .cta-section .d-flex.flex-wrap {
+        flex-direction: column !important;
+        gap: 12px !important;
+        width: 100%;
+      }
+      .cta-section .btn-primary-hero,
+      .cta-section .btn-outline-hero {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 20px;
+        font-size: 14px;
+        margin: 0;
+      }
+      .cta-section .col-xl-5 {
+        margin-top: 30px;
+      }
     }
   </style>
 </head>

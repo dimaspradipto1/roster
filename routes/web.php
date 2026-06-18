@@ -17,6 +17,9 @@ use App\Http\Controllers\NomorAdminController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\MilestoneController;
+use App\Http\Controllers\BannerController;
+use App\Http\Controllers\FeatureController;
+use App\Http\Controllers\TestimonialController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +32,7 @@ Route::controller(FrontendController::class)->group(function () {
     Route::get('/galeri', 'galeri')->name('homepage.galeri');
     Route::get('/tentang', 'tentang')->name('homepage.tentang');
     Route::get('/testimoni', 'testimoni')->name('homepage.testimoni');
+    Route::post('/testimoni/kirim', 'storeTestimonial')->name('homepage.testimoni.store');
     Route::get('/faq', 'faq')->name('homepage.faq');
     Route::get('/kontak', 'kontak')->name('homepage.kontak');
 });
@@ -72,4 +76,7 @@ Route::middleware(['auth', 'checkrole'])->group(function () {
         ->names('faq');
     Route::resource('about', AboutController::class);
     Route::resource('milestone', MilestoneController::class);
+    Route::resource('banner', BannerController::class);
+    Route::resource('feature', FeatureController::class);
+    Route::resource('testimonial', TestimonialController::class);
 });
