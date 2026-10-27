@@ -121,9 +121,16 @@
           </li>
 
           <li class="nav-item">
-              <a class="nav-link collapsed" href="{{ route('user.index') }}">
-                  <i class="bi bi-person"></i>
+              <a class="nav-link {{ Route::is('user.*') ? '' : 'collapsed' }}" href="{{ route('user.index') }}">
+                  <i class="bi bi-people"></i>
                   <span>Users</span>
+              </a>
+          </li>
+
+          <li class="nav-item">
+              <a class="nav-link {{ Route::is('inspeksi.*') ? '' : 'collapsed' }}" href="{{ route('inspeksi.index') }}">
+                  <i class="bi bi-clipboard-check"></i>
+                  <span>Inspeksi</span>
               </a>
           </li>
 

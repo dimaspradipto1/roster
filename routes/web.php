@@ -20,6 +20,7 @@ use App\Http\Controllers\StrukturOrganisasiController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\VisiMisiController;
 use App\Http\Controllers\NilaiPerusahaanController;
+use App\Http\Controllers\InspeksiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,4 +86,5 @@ Route::middleware(['auth', 'checkrole'])->group(function () {
     Route::resource('partner', PartnerController::class);
     Route::resource('visimisi', VisiMisiController::class);
     Route::resource('nilaiperusahaan', NilaiPerusahaanController::class);
+    Route::resource('inspeksi', InspeksiController::class);
 });
